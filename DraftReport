@@ -1,0 +1,22 @@
+def report(stack, stack.width, stack.height, section)
+  #define global parameters
+  cgGlobal=
+  #sum of local cgs
+  stack.cg + base.cg + plate.cg
+
+  massGlobal=
+  stack.mass + base.mass + plate.mass
+
+  print("Materials used:\n")
+  print("Base: {base.material}\n")
+  print("Base Bolts: {basebolt.material}\n")
+  print("Plate: {plate.material}\n")
+  print("Beams: {Beam.material}\n")
+  print("Bolts: {Bolt.material}\n")
+
+
+  print("Global Center of Gravity: {cgGlobal}\n")
+  print("Global Mass: {massGlobal}\n")
+  
+  
+  return report
