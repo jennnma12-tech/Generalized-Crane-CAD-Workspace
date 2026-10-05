@@ -1,0 +1,74 @@
+#from baker
+def build_end_plate(width: float, thickness: float, hole_dia: float, hole_margin: float) -> cq.Workplane:
+    """
+    Builds the heavy steel plates used to bolt mast sections together.
+    Includes the four bolt holes in the corners.
+    """
+    # Calculate the distance between bolt holes based on the margin
+    hole_spacing = width - (2 * hole_margin)
+    
+    plate = (
+        cq.Workplane("XY")
+        .box(width, width, thickness) # Create the main square plate
+        .faces(">Z").workplane()      # Select the top face to drill holes
+        .rect(hole_spacing, hole_spacing, forConstruction=True) # Create a construction rectangle
+        .vertices()                   # Select the 4 corners of that rectangle
+        .hole(hole_dia)               # Drill the bolt holes through the plate
+    )
+    plate.material=steel.name
+    plate.volume=width**2 * thickness
+    steel.volume=plate.volume
+    plate.mass=steel.mass
+    return plate
+
+#from me:
+# m=d*v
+#in kg/m**3
+
+#assumes Concrete 32
+concrete.name="concrete"
+concrete.density= 2400
+concrete.mass= concrete.density * concrete.volume
+
+#assumes ASTM A514
+steel.name="steel"
+steel.density= 7800   
+steel.mass= steel.volume * steel.density
+
+reinforcedConcrete.name="reinforced concrete"
+reinforcedConcrete.xsection= slab.width**2
+reinforcedConcrete.mass= slab.thickness*
+  (
+  0.99 * reinforcedConcrete.xsection * concrete.density 
+  + 0.01 * reinforcedConcrete.xsection * steel.density
+  )
+
+  
+
+def build_base(slab.width: float, slab.thickness: float, slab.hole_dia: float, slab.hole_margin: float) -> cq.Workplane:
+  base.material=reinforcedConcrete.name
+  base.volume=slab.width**2 * thickness
+  reinforcedConcrete.volume=base.volume
+  base.mass=reinforcedConcrete.mass
+    
+  base.mass=reinforcedConcrete.mass
+ # insert base.cg= sum(location * base.mass) / base.mass here
+  """
+    Builds a rectangular concrete pad with anchor bolts.
+    Slab contains the following fields:
+    * width
+    * thickness
+    * hole diameter (based on bolt size)
+    """
+    # Calculate the distance between bolt holes based on the margin
+    hole_spacing = width - (2 * hole_margin)
+
+   base = (
+        cq.Workplane("XY")
+        .box(slab.width, slab.width, slab.thickness) # Creates slab
+        .faces(">Z").workplane()      # Select the top face to drill holes
+        .rect(hole_spacing, hole_spacing, forConstruction=True) # Create a construction rectangle
+        .vertices()                   # Select the 4 corners of that rectangle
+        .hole(slab.hole_dia)               # Drill the bolt holes through the plate
+    )
+  return base
