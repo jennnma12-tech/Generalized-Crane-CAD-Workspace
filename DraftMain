@@ -28,8 +28,8 @@ print("1. Starting script...")
 
 #print("Executive summary imported as .PDF")
 
-
-
+#change made 10/5/2026: replaced hardocded 25.4 to in for readability
+in=25.4
 
 
 #information about script from baker:
@@ -37,18 +37,18 @@ print("1. Starting script...")
 # dims are in mm, length is in mm for consistency with the configuration file
 
 # define cross-section of chord (truss corner, main structural beams), hollow tube profile
-#corner_profile = MemberProfile(shape='hollow_rectangle', width=10*25.4, height=10*25.4, wall_thickness=0.625*25.4)
-corner_profile = MemberProfile(shape='hollow_rectangle', width=10*25.4, height=10*25.4, wall_thickness=0.625*25.4)
+#corner_profile = MemberProfile(shape='hollow_rectangle', width=10*in, height=10*in, wall_thickness=0.625*in)
+corner_profile = MemberProfile(shape='hollow_rectangle', width=10*in, height=10*in, wall_thickness=0.625*in)
 
 # define truss geometry, triangular cross-section with specified dimensions
-macro_geometry = MacroGeometry(length=489.0*25.4, width=96.0*25.4, height=96.0*25.4, main_chord_profile=corner_profile, cross_section_shape=MastGeometry.RECTANGULAR)
+macro_geometry = MacroGeometry(length=489.0*in, width=96.0*in, height=96.0*in, main_chord_profile=corner_profile, cross_section_shape=MastGeometry.RECTANGULAR)
 print("Defined macro geometry and corner profile...")
 
 #primary bracing definition, inverted v pattern, horizontal webbing profile solid rectangle, diagonal webbing profile solid rectangle
-primary_bracing = BracingConfig(style=BracingStyle.INVERTED_V, num_bays=8, diagonal_profile=MemberProfile(shape='hollow_rectangle', width=5*25.4, height=5*25.4, wall_thickness=0.500*25.4), has_horizontal_struts=True, horizontal_profile=MemberProfile(shape='hollow_rectangle', width=5*25.4, height=5*25.4, wall_thickness=0.500*25.4), has_cap_struts=True, cap_strut_profile=MemberProfile(shape='hollow_rectangle', width=5*25.4, height=5*25.4, wall_thickness=0.500*25.4))
+primary_bracing = BracingConfig(style=BracingStyle.INVERTED_V, num_bays=8, diagonal_profile=MemberProfile(shape='hollow_rectangle', width=5*in, height=5*in, wall_thickness=0.500*in), has_horizontal_struts=True, horizontal_profile=MemberProfile(shape='hollow_rectangle', width=5*in, height=5*in, wall_thickness=0.500*in), has_cap_struts=True, cap_strut_profile=MemberProfile(shape='hollow_rectangle', width=5*in, height=5*in, wall_thickness=0.500*in))
 print("Defined primary bracing pattern...")
 
 #secondary bracing definition, x brace pattern, webbing profile solid rectangle
-secondary_bracing = BracingConfig(style=BracingStyle.WARREN, num_bays=8, diagonal_profile=MemberProfile(shape='hollow_rectangle', width=5*25.4, height=5*25.4, wall_thickness=0.500*25.4), has_cap_struts=True, cap_strut_profile=MemberProfile(shape='hollow_rectangle', width=5*25.4, height=5*25.4, wall_thickness=0.500*25.4))
+secondary_bracing = BracingConfig(style=BracingStyle.WARREN, num_bays=8, diagonal_profile=MemberProfile(shape='hollow_rectangle', width=5*in, height=5*in, wall_thickness=0.500*in), has_cap_struts=True, cap_strut_profile=MemberProfile(shape='hollow_rectangle', width=5*in, height=5*in, wall_thickness=0.500*in))
 
 #create truss section by adding in corner posts
