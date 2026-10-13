@@ -94,7 +94,7 @@ def mesh_build_2d_flat_panel(bracing: BracingConfig, panel_height: float, panel_
         if bracing_style == BracingStyle.X_BRACE:
             s1 = build_strut(bottom_left, top_right, bracing.diagonal_profile)
             s2 = build_strut(bottom_right, top_left, bracing.diagonal_profile)
-            panel = panelunion(s1.union(s2))
+            panel = panel.add(s1.union(s2))
             
         elif bracing_style == BracingStyle.WARREN:
             start, end = (bottom_left, top_right) if i % 2 == 0 else (bottom_right, top_left)
@@ -102,24 +102,24 @@ def mesh_build_2d_flat_panel(bracing: BracingConfig, panel_height: float, panel_
             
         elif bracing_style == BracingStyle.INVERTED_V:
             top_mid = (0, y_top, 0)
-            panel = panelunion(build_strut(bottom_left, top_mid, bracing.diagonal_profile))
-            panel = panelunion(build_strut(bottom_right, top_mid, bracing.diagonal_profile))
+            panel = panel.add(build_strut(bottom_left, top_mid, bracing.diagonal_profile))
+            panel = panel.add(build_strut(bottom_right, top_mid, bracing.diagonal_profile))
             
         elif bracing_style == BracingStyle.DIAGONAL_ONLY:
-            panel = panelunion(build_strut(bottom_left, top_right, bracing.diagonal_profile))
+            panel = panel.add(build_strut(bottom_left, top_right, bracing.diagonal_profile))
 
         # Add horizontal struts only if needed and only at the top of the bay 
         # (to avoid overlapping the bottom of the next bay)
         if bracing.has_horizontal_struts and bracing.horizontal_profile:
-            panel = panelunion(build_strut(top_left, top_right, bracing.horizontal_profile))
+            panel = panel.add(build_strut(top_left, top_right, bracing.horizontal_profile))
 
         #Add top and bottom "cap" struts if specified (horizontal strut but only at top/bottom of section)
         if bracing.has_cap_struts and bracing.cap_strut_profile:
             if i == 0:
-                panel = panelunion(build_strut(bottom_left, bottom_right, bracing.cap_strut_profile))
+                panel = panel.add(build_strut(bottom_left, bottom_right, bracing.cap_strut_profile))
             if i == bracing.num_bays - 1:
                 if bracing.has_horizontal_struts == False:
-                    panel = panelunion(build_strut(top_left, top_right, bracing.cap_strut_profile))
+                    panel = panel.add(build_strut(top_left, top_right, bracing.cap_strut_profile))
 
     return panel
 
@@ -155,31 +155,31 @@ def build_2d_flat_panel(bracing: BracingConfig, panel_width: float, panel_height
         if bracing_style == BracingStyle.X_BRACE:
             s1 = build_strut(bottom_left, top_right, bracing.diagonal_profile)
             s2 = build_strut(bottom_right, top_left, bracing.diagonal_profile)
-            panel = panelunion(s1.union(s2))
+            panel = panel.add(s1.union(s2))
             
         elif bracing_style == BracingStyle.WARREN:
             start, end = (bottom_left, top_right) if i % 2 == 0 else (bottom_right, top_left)
-            panel = panelunion(build_strut(start, end, bracing.diagonal_profile))
+            panel = panel.add(build_strut(start, end, bracing.diagonal_profile))
             
         elif bracing_style == BracingStyle.INVERTED_V:
             top_mid = (0, y_top, 0)
-            panel = panelunion(build_strut(bottom_left, top_mid, bracing.diagonal_profile))
-            panel = panelunion(build_strut(bottom_right, top_mid, bracing.diagonal_profile))
+            panel = panel.add(build_strut(bottom_left, top_mid, bracing.diagonal_profile))
+            panel = panel.add(build_strut(bottom_right, top_mid, bracing.diagonal_profile))
             
         elif bracing_style == BracingStyle.DIAGONAL_ONLY:
-            panel = panelunion(build_strut(bottom_left, top_right, bracing.diagonal_profile))
+            panel = panel.add(build_strut(bottom_left, top_right, bracing.diagonal_profile))
 
         # Add horizontal struts only if needed and only at the top of the bay 
         # (to avoid overlapping the bottom of the next bay)
         if bracing.has_horizontal_struts and bracing.horizontal_profile:
-            panel = panelunion(build_strut(top_left, top_right, bracing.horizontal_profile))
+            panel = panel.add(build_strut(top_left, top_right, bracing.horizontal_profile))
 
         #Add top and bottom "cap" struts if specified (horizontal strut but only at top/bottom of section)
         if bracing.has_cap_struts and bracing.cap_strut_profile:
             if i == 0:
-                panel = panelunion(build_strut(bottom_left, bottom_right, bracing.cap_strut_profile))
+                panel = panel.add(build_strut(bottom_left, bottom_right, bracing.cap_strut_profile))
             if i == bracing.num_bays - 1:
                 if bracing.has_horizontal_struts == False:
-                    panel = panelunion(build_strut(top_left, top_right, bracing.cap_strut_profile))
-
+                    panel = panel.add(build_strut(top_left, top_right, bracing.cap_strut_profile))
+        panel=panel.combine()
     return panel
