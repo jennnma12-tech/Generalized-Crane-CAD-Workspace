@@ -16,6 +16,23 @@ print("Imported base_assembly...")
 print("1. Starting script...")
 
 
+print("/n /n End Plate Characteristics /n /n")
+class EndPlate
+      def EndPlate(Width,Thickness,BoltDiameter,BoltMaterial,HoleDiameter,Material)
+          self.Width=Width
+          self.Thickness=Thickness
+          self.BoltDiameter=BoltDiameter
+          self.BoltMaterial=BoltMaterial
+          self.HoleDiameter=HoleDiameter
+          self.Material=Material
+Width=float(input("Enter end plate width: "))
+Thickness=float(input("Enter end plate thickness: "))
+BoltDiameter=float(input("Enter the bolt diameter: "))
+BoltMaterial=input("Enter the bolt material: ")
+HoleDiameter=float(input("Enter the hole diameter: "))
+Material=input("Enter the end plate material: ")
+
+
 
 
 #here I export report of center of gravity, mass, etc.
