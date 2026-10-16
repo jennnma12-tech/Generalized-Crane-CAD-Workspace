@@ -15,6 +15,39 @@ print("Imported base_assembly...")
 
 print("1. Starting script...")
 
+print("/n /n General Mast Geometry Characteristics /n /n")
+class Mast
+      def Mast(Width,Thickness,BoltDiameter,BoltMaterial,HoleDiameter,Material,WeldThickness,WeldAngle,Tolerance,Resolution)
+          self.Width=Width
+          self.Thickness=Thickness
+          self.BoltDiameter=BoltDiameter
+          self.BoltMaterial=BoltMaterial
+          self.HoleDiameter=HoleDiameter
+          self.Material=Material
+          self.WeldThickness=WeldThickness
+          self.WeldAngle=WeldAngle
+          self.Tolerance=Tolerance
+          self.Resolution=Resolution
+
+Width=float(input("Enter end plate width: "))
+Thickness=float(input("Enter end plate thickness: "))
+BoltDiameter=float(input("Enter the bolt diameter: "))
+BoltMaterial=input("Enter the bolt material: ")
+HoleDiameter=float(input("Enter the hole diameter: "))
+Material=input("Enter the end plate material: ")
+WeldThickness=float(input("Enter the weld thickness (mm): "))
+WeldAngle=45
+WeldAngle=float(input("Enter the weld angle (default = 45 degrees: "))
+Tolerance=float(input("Enter the tolerance: +/- "))
+Resolution=input("Enter the resolution/n Please enter Lo, Med, or Hi: ")
+      if Resolution ~= "Lo" or "Med" or "Hi"
+      print("Invalid Resolution. Please enter Lo, Med, or Hi: ")
+
+class Taper
+Taper=bool(input("Is there a taper?/n Type 1 = yes or 0 = no"))
+      if Taper=1
+            Taper.Angle=input("Enter taper angle: ")
+
 
 print("/n /n End Plate Characteristics /n /n")
 class EndPlate
