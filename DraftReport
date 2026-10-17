@@ -7,12 +7,32 @@ def report(stack, stack.width, stack.height, section)
   massGlobal=
   stack.mass + base.mass + plate.mass
 
-  print("Materials used:\n")
-  print("Base: {base.material}\n")
-  print("Base Bolts: {basebolt.material}\n")
-  print("Plate: {plate.material}\n")
-  print("Beams: {Beam.material}\n")
-  print("Bolts: {Bolt.material}\n")
+
+
+with open("tower_report.txt", "w") as e:
+  print("Materials used:\n", MaterialList, file=e)
+  print("Total Bolts Used:\n", BoltsList, file=e)
+
+
+"""
+MAKING THE BOM
+"""
+l.lvl= ("1","2","3", etc.)
+l.itm= ("000-20","000-21","000-22", etc.)
+l.dsc= ("Foundation Gusset","Truss","Bolt", etc.)
+l.mtl= ("Lumber","Concrete","Steel", etc.)
+l.qty= ("1","2","3", etc.)
+
+
+if len(l.lvl) == len(l.itm) == len(l.dsc) == len(l.mtl) == len(l.qty) :
+          bom=list(zip(l.lvl, l.itm, l.dsc, l.mtl, l.qty))
+          with open("tower_bom.csv", "w") as q:
+            print("LEVEL,PART NUMBER,DESCRIPTION,MATERIAL,QUANTITY\n\n", file=q)  
+            for row in bom:
+                 print(*row,sep=",",file=q) 
+else :
+  print("Missing entry error. Please complete all BOM rows.")
+
 
 
   print("Global Center of Gravity: {cgGlobal}\n")
