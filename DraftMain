@@ -45,7 +45,7 @@ Resolution=input("Enter the resolution/n Please enter Lo, Med, or Hi: ")
 
 class Taper
 Taper=bool(input("Is there a taper?/n Type 1 = yes or 0 = no"))
-      if Taper=1
+      if Taper=True
             Taper.Angle=input("Enter taper angle: ")
 
 
@@ -65,8 +65,37 @@ BoltMaterial=input("Enter the bolt material: ")
 HoleDiameter=float(input("Enter the hole diameter: "))
 Material=input("Enter the end plate material: ")
 
+print("/n /n Base Characteristics /n /n")
+class Base
+      def Base(Width,Thickness,BoltDiameter,BoltMaterial,HoleDiameter,Material)
+          self.Width=Width
+          self.Thickness=Thickness
+          self.BoltDiameter=BoltDiameter
+          self.BoltMaterial=BoltMaterial
+          self.HoleDiameter=HoleDiameter
+          self.Material=Material
+Width=float(input("Enter end plate width: "))
 
+print("/n /n Bracing Characteristics /n /n")
+class Brace
+      def Brace(Struct,BayNum,DiagProfile,EccOffset)
+          self.Struct=Struct # Structure
+          self.BayNum=BayNum # Number of Bays
+          self.DiagProfile=DiagProfile # Diagonal Profile
+          self.EccOffset=EccOffset # Eccentricity Offset
 
+Width=float(input("Enter end plate width: "))
+
+class HorizStruts
+HorizStruts=bool(input("Are there horizontal struts?/n Type 1 = yes or 0 = no"))
+      if HorizStruts=True
+            HorizStruts.Material=input("Enter strut material: ")
+
+class CapStruts
+CapStruts=bool(input("Are there cap struts?/n Type 1 = yes or 0 = no"))
+      if CapStruts=True
+            CapStruts.Material=input("Enter strut material: ")
+            CapStruts.Profile=input("Enter strut profile: ")
 
 #here I export report of center of gravity, mass, etc.
 
