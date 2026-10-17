@@ -15,9 +15,13 @@ print("Imported base_assembly...")
 
 print("1. Starting script...")
 
-print("/n /n General Mast Geometry Characteristics /n /n")
-class Mast
-      def Mast(Width,Length,Height,BoltDiameter,BoltMaterial,HoleDiameter,Material,WeldThickness,WeldAngle,Tolerance,Resolution)
+print("
+ 
+ General Mast Geometry Characteristics 
+ 
+")
+class Mast:
+      def __init__(Width,Length,Height,BoltDiameter,BoltMaterial,HoleDiameter,Material,WeldThickness,WeldAngle,Tolerance,Resolution)
           self.Width=Width
           self.Length=Length
           self.Height=Height
@@ -39,21 +43,27 @@ HoleDiameter=float(input("Enter the hole diameter: "))
 Material=input("Enter the end plate material: ")
 WeldThickness=float(input("Enter the weld thickness (mm): "))
 WeldAngle=45
-WeldAngle=float(input("Enter the weld angle (default = 45 degrees: "))
+WeldAngle=float(input("Enter the weld angle (default = 45 degrees: ")))
 Tolerance=float(input("Enter the tolerance: +/- "))
-Resolution=input("Enter the resolution/n Please enter Lo, Med, or Hi: ")
-      if Resolution ~= "Lo" or "Med" or "Hi"
+Resolution=input("Enter the resolution
+ Please enter Lo, Med, or Hi: ")
+      if Resolution != "Lo" or "Med" or "Hi"
       print("Invalid Resolution. Please enter Lo, Med, or Hi: ")
 
-class Taper
-Taper=bool(input("Is there a taper?/n Type 1 = yes or 0 = no"))
-      if Taper=True
+class Taper:
+Taper=input("Is there a taper?
+ Type 1 = yes or 0 = no")
+      if Taper=="1"
             Taper.Angle=input("Enter taper angle: ")
 
 
-print("/n /n End Plate Characteristics /n /n")
-class EndPlate
-      def EndPlate(Width,Thickness,BoltDiameter,BoltMaterial,HoleDiameter,Material)
+print("
+ 
+ End Plate Characteristics 
+ 
+")
+class EndPlate:
+      def __init__(Width,Thickness,BoltDiameter,BoltMaterial,HoleDiameter,Material)
           self.Width=Width
           self.Thickness=Thickness
           self.BoltDiameter=BoltDiameter
@@ -67,9 +77,13 @@ BoltMaterial=input("Enter the bolt material: ")
 HoleDiameter=float(input("Enter the hole diameter: "))
 Material=input("Enter the end plate material: ")
 
-print("/n /n Base Characteristics /n /n")
-class Base
-      def Base(Width,Thickness,BoltDiameter,BoltMaterial,HoleDiameter,Material)
+print("
+ 
+ Base Characteristics 
+ 
+")
+class Base:
+      def __init__(Width,Thickness,BoltDiameter,BoltMaterial,HoleDiameter,Material)
           self.Width=Width
           self.Thickness=Thickness
           self.BoltDiameter=BoltDiameter
@@ -78,9 +92,13 @@ class Base
           self.Material=Material
 Width=float(input("Enter end plate width: "))
 
-print("/n /n Bracing Characteristics /n /n")
-class Brace
-      def Brace(Struct,BayNum,DiagProfile,EccOffset)
+print("
+ 
+ Bracing Characteristics 
+ 
+")
+class Brace:
+      def __init__(Struct,BayNum,DiagProfile,EccOffset)
           self.Struct=Struct # Structure
           self.BayNum=BayNum # Number of Bays
           self.DiagProfile=DiagProfile # Diagonal Profile
@@ -89,13 +107,15 @@ class Brace
 Width=float(input("Enter end plate width: "))
 
 class HorizStruts
-HorizStruts=bool(input("Are there horizontal struts?/n Type 1 = yes or 0 = no"))
-      if HorizStruts=True
+HorizStruts=input("Are there horizontal struts?
+ Type 1 = yes or 0 = no")
+      if HorizStruts=="1"
             HorizStruts.Material=input("Enter strut material: ")
 
 class CapStruts
-CapStruts=bool(input("Are there cap struts?/n Type 1 = yes or 0 = no"))
-      if CapStruts=True
+CapStruts=input("Are there cap struts?
+ Type 1 = yes or 0 = no")
+      if CapStruts=="1"
             CapStruts.Material=input("Enter strut material: ")
             CapStruts.Profile=input("Enter strut profile: ")
 
