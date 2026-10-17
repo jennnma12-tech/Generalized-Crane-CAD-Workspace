@@ -17,9 +17,10 @@ print("1. Starting script...")
 
 print("/n /n General Mast Geometry Characteristics /n /n")
 class Mast
-      def Mast(Width,Thickness,BoltDiameter,BoltMaterial,HoleDiameter,Material,WeldThickness,WeldAngle,Tolerance,Resolution)
+      def Mast(Width,Length,Height,BoltDiameter,BoltMaterial,HoleDiameter,Material,WeldThickness,WeldAngle,Tolerance,Resolution)
           self.Width=Width
-          self.Thickness=Thickness
+          self.Length=Length
+          self.Height=Height
           self.BoltDiameter=BoltDiameter
           self.BoltMaterial=BoltMaterial
           self.HoleDiameter=HoleDiameter
@@ -30,7 +31,8 @@ class Mast
           self.Resolution=Resolution
 
 Width=float(input("Enter end plate width: "))
-Thickness=float(input("Enter end plate thickness: "))
+Length=float(input("Enter end plate length: "))
+Height=float(input("Enter end plate height: "))
 BoltDiameter=float(input("Enter the bolt diameter: "))
 BoltMaterial=input("Enter the bolt material: ")
 HoleDiameter=float(input("Enter the hole diameter: "))
