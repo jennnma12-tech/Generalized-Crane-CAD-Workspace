@@ -116,7 +116,7 @@ def build_structural_member(length: float, profile: MemberProfile, x_offset: flo
     Builds a single beam or tube. 
     Can be placed anywhere on the XY plane using x_offset and y_offset.
     """
-    sketch = create_profile_sketch(profile)
+    sketch = create_profile_sketch(profile, Resolution)
     
     # 1. Select the XY plane
     # 2. Move the center to the specified (x, y) coordinates
