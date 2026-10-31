@@ -35,22 +35,8 @@ def create_profile_sketch(profile: MemberProfile, Resolution) -> cq.Sketch:
                 
             sketch = sketch.rect(profile.width, profile.height)
         else:
-            raise ValueError(f"Geometry for shape '{profile.shape}' is not yet implemented.")                
-    elif Resolution=="med":
-        if profile.shape == 'solid_tube':
-            if profile.diameter is None:
-                raise ValueError("A 'solid_tube' profile requires a 'diameter'.")
-                
-            sketch = sketch.circle(profile.diameter / 2.0)
-            
-        elif profile.shape == 'solid_rectangle':
-            if profile.width is None or profile.height is None:
-                raise ValueError("A 'solid_rectangle' profile requires both 'width' and 'height'.")
-                
-            sketch = sketch.rect(profile.width, profile.height)
-        else:
             raise ValueError(f"Geometry for shape '{profile.shape}' is not yet implemented.")        
-    elif Resolution=="hi":
+    if Resolution=="hi":
         if profile.shape == 'hollow_tube':
             # Safety check to ensure required dimensions exist
             if profile.diameter is None or profile.wall_thickness is None:
