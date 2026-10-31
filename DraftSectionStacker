@@ -22,6 +22,7 @@ def stack_sections(section, stack.height)
         cq.Workplane(plane)
         .add(section)
     )
+  combine()
   #bolt on new section
   end
   return stack
