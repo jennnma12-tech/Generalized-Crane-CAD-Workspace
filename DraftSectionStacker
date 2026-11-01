@@ -6,27 +6,18 @@ from components import create_profile_sketch
 
 
 #from baker:
-def stack_sections(section, stack.height)
+def stack_sections(section, stack, section_cad)
 
   iterations= stack.height / section.height
 
-  if math.floor(iterations,0) != iterations
-      even_iterations=math.floor(iterations,0)
+  if math.floor(iterations,0) != iterations #If it is not a whole number
+      even_iterations=math.floor(iterations,0) #Make it one
       raise ValueError("Uneven number of sections. Rounding down to ",even_iterations," sections.")
-  i=0
-  for i in range(iterations)
-  #plane= plane.x + plane.y + plane.z
-  #plane.z = plane.z + section.height +- tolerance
-  #stack = stack + new_section  
-  stack = (
-        cq.Workplane(plane)
-        .add(section)
-    )
-  combine()
-  #bolt on new section
-  end
-  return stack
-
+  for i in range(iterations):
+    new_section=section_cad.translate(0,0,i*section.height)
+    stack_cad.union(new_section)
+  return stack_cad
+   
 
 
 
