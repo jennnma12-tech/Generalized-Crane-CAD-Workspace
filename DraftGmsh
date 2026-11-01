@@ -1,1 +1,4 @@
 import gmsh
+import matplotlib.pyplot as plt
+import numpy as np
+gmsh.initialize()
