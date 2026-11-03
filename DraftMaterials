@@ -1,0 +1,87 @@
+from dataclasses import dataclass, field
+
+@dataclass(frozen=True)
+class Steel:
+    # Identity
+      standard: str  
+      specification: str
+  
+    # Required properties (SI units in the field comment)
+    density: float            # kg/m^3
+    youngs_modulus: float     # GPa
+    yield_strength: float     # MPa
+    poissons_ratio: float     # dimensionless
+
+    # Optional metadata
+    source: str = ""
+    notes: str = ""
+
+    def __post_init__(self):
+        # Validation runs once, right after the object is created
+        if self.density <= 0:
+            raise ValueError(f"{self.name}: density must be positive")
+        if self.youngs_modulus <= 0:
+            raise ValueError(f"{self.name}: Young's modulus must be positive")
+        if self.yield_strength <= 0:
+            raise ValueError(f"{self.name}: yield strength must be positive")
+        if not 0 < self.poissons_ratio < 0.5:
+            raise ValueError(f"{self.name}: Poisson's ratio must be between 0 and 0.5")
+
+@dataclass(frozen=True)
+class Concrete:
+    # Identity
+      standard: str  
+      specification: str
+  
+    # Required properties (SI units in the field comment)
+    density: float            # kg/m^3
+    tensile_strength: float     # MPa
+    yield_strength: float     # MPa
+
+    # Optional metadata
+    source: str = ""
+    notes: str = ""
+
+    def __post_init__(self):
+        # Validation runs once, right after the object is created
+        if self.density <= 0:
+            raise ValueError(f"{self.name}: density must be positive")
+        if self.tensile_strength <= 0:
+            raise ValueError(f"{self.name}: Young's modulus must be positive")
+        if self.yield_strength <= 0:
+            raise ValueError(f"{self.name}: yield strength must be positive")\
+
+
+
+
+
+"""
+examples 
+
+from .models import Concrete
+from .models import Steel
+
+STRUCTURAL_STEEL_A992 = Material(
+    material="Structural steel",
+    standard="ASTM A992",
+    specification="Grade 50, W-shapes",
+    density=7850,              # kg/m^3
+    youngs_modulus=200,        # GPa
+    yield_strength=345,        # MPa (50 ksi minimum)
+    poissons_ratio=0.30,
+    source="AISC 360-22, Section A3.1",
+)
+
+STRUCTURAL_STEEL_A36 = Material(
+    material="Structural steel",
+    standard="ASTM A36",
+    specification="Shapes and plates",
+    density=7850,
+    youngs_modulus=200,
+    yield_strength=250,        # MPa (36 ksi minimum)
+    poissons_ratio=0.30,
+    source="ASTM A36/A36M",
+)
+
+LOGS_STEEL = (STRUCTURAL_STEEL_A992, STRUCTURAL_STEEL_A36)
+"""
