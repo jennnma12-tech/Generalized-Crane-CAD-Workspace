@@ -2,22 +2,47 @@ import gmsh
 import matplotlib.pyplot as plt
 import numpy as np
 gmsh.initialize()
+import math
+import os
+import sys
+
+# ------------------------------------------------------------------------------
+#
+#  Setting up variables:
+#
+# ------------------------------------------------------------------------------
+lc = 1e-2
+
+#WIDTH (x)
+if Mast.Width < Base.Width:
+    w=Base.Width
+elif Mast.Width < EndPlate.Width:
+    w=EndPlate.Width
+else:
+    w=Mast.Width
+
+#LENGTH (y)
+l=Mast.Length
+
+#HEIGHT (z)
+h=Mast.Height+EndPlate.Thickness+Base.Thickness
+
+tol=float(input("Enter how many meters the box for the field will extend outside the dimensions of the mast?"))  
+if tol==0:
+    raise ValueError("Box must be larger than dimensions.")
+
+yes3D=bool(input("Visualize in 3D? \n Enter Yes or leave blank []")) 
+
+toggleCFD=bool(input("Mesh for CFD? \n Enter Yes or leave blank []")) 
+
+toggleFEA=bool(input("Mesh for FEA? \n Enter Yes or leave blank []")) 
 
 #From tutorials:
 # ------------------------------------------------------------------------------
 #
-#  Gmsh Python tutorial 20
-#
 #  STEP import and manipulation, geometry partitioning
 #
 # ------------------------------------------------------------------------------
-
-# Load a STEP geometry and partition it into slices.
-
-import gmsh
-import math
-import os
-import sys
 
 gmsh.initialize()
 
@@ -152,7 +177,6 @@ gmsh.model.add("crane_model")
 #
 # ------------------------------------------------------------------------------
 
-
 lc = 1e-2
 
 #WIDTH (x)
@@ -169,8 +193,7 @@ l=Mast.Length
 #HEIGHT (z)
 h=Mast.Height+EndPlate.Thickness+Base.Thickness
 
-tol=float(input("Enter how many meters the box 
-for the field will extend outside the dimensions of the mast?"))  
+tol=float(input("Enter how many meters the box for the field will extend outside the dimensions of the mast?"))  
 if tol==0:
     raise ValueError("Box must be larger than dimensions.")
 
