@@ -12,8 +12,7 @@ gmsh.initialize()
 #
 # ------------------------------------------------------------------------------
 
-# The OpenCASCADE CAD kernel allows to import STEP files and to modify them. In
-# this tutorial we will load a STEP geometry and partition it into slices.
+# Load a STEP geometry and partition it into slices.
 
 import gmsh
 import math
@@ -22,19 +21,13 @@ import sys
 
 gmsh.initialize()
 
-gmsh.model.add("t20")
+gmsh.model.add("crane_model")
 
 # Load a STEP file (using `importShapes' instead of `merge' allows to directly
 # retrieve the tags of the highest dimensional imported entities):
 path = os.path.dirname(os.path.abspath(__file__))
 v = gmsh.model.occ.importShapes(os.path.join(path, os.pardir, 't20_data.step'))
-
-# If we had specified
-#
-# gmsh.option.setString('Geometry.OCCTargetUnit', 'M')
-#
-# before merging the STEP file, OpenCASCADE would have converted the units to
-# meters (instead of the default, which is millimeters).
+gmsh.option.setString('Geometry.OCCTargetUnit', 'M') #gives units in meters from default: mm
 
 # Get the bounding box of the volume:
 xmin, ymin, zmin, xmax, ymax, zmax = gmsh.model.occ.getBoundingBox(
@@ -43,7 +36,7 @@ xmin, ymin, zmin, xmax, ymax, zmax = gmsh.model.occ.getBoundingBox(
 # We want to slice the model into N slices, and either keep the volume slices
 # or just the surfaces obtained by the cutting:
 
-N = 5  # Number of slices
+N = float(input("Enter number of desired slices:")  # Number of slices
 dir = 'X' # Direction: 'X', 'Y' or 'Z'
 surf = False  # Keep only surfaces?
 
@@ -106,46 +99,28 @@ if surf:
 gmsh.option.setNumber("Mesh.MeshSizeMin", 3)
 gmsh.option.setNumber("Mesh.MeshSizeMax", 3)
 gmsh.model.mesh.generate(3)
-gmsh.write("t20.msh")
+gmsh.write("crane_model.msh")
 
 # Launch the GUI to see the results:
 if '-nopopup' not in sys.argv:
     gmsh.fltk.run()
 
-gmsh.finalize()
 
 # ------------------------------------------------------------------------------
 #
-#  Gmsh Python tutorial 17
-#
-#  Anisotropic background mesh
+#  Pre-processing mesh
 #
 # ------------------------------------------------------------------------------
-
-# As seen in `t7.py', mesh sizes can be specified very accurately by providing a
-# background mesh, i.e., a post-processing view that contains the target mesh
-# sizes.
-
-# Here, the background mesh is represented as a metric tensor field defined on a
+# Background mesh is represented as a metric tensor field defined on a
 # square. One should use bamg as 2d mesh generator to enable anisotropic meshes
 # in 2D.
 
-import gmsh
-import math
-import os
-import sys
+gmsh.model.add("crane_model")
 
-gmsh.initialize()
-
-gmsh.model.add("t17")
-
-# Create a square
-gmsh.model.occ.addRectangle(-2, -2, 0, 4, 4)
-gmsh.model.occ.synchronize()
 
 # Merge a post-processing view containing the target anisotropic mesh sizes
 path = os.path.dirname(os.path.abspath(__file__))
-gmsh.merge(os.path.join(path, os.pardir, 't17_bgmesh.pos'))
+gmsh.merge(os.path.join(path, os.pardir, 'crane_model_bgmesh.pos'))
 
 # Apply the view as the current background mesh
 bg_field = gmsh.model.mesh.field.add("PostView")
@@ -158,52 +133,125 @@ gmsh.option.setNumber("Mesh.AnisoMax", 1000)
 gmsh.option.setNumber("Mesh.Algorithm", 7)
 
 gmsh.model.mesh.generate(2)
-gmsh.write("t17.msh")
-
-# Launch the GUI to see the results:
-if '-nopopup' not in sys.argv:
-    gmsh.fltk.run()
-
-gmsh.finalize()
-
-#  Gmsh Python tutorial 7
-#
-#  Background meshes
-#
-# ------------------------------------------------------------------------------
-
-import gmsh
-import os
-import sys
-
-# Mesh sizes can be specified very accurately by providing a background mesh,
-# i.e., a post-processing view that contains the target mesh sizes.
-
-gmsh.initialize()
+gmsh.write("crane_model.msh")
 
 # Merge a list-based post-processing view containing the target mesh sizes:
 path = os.path.dirname(os.path.abspath(__file__))
-gmsh.merge(os.path.join(path, os.pardir, 't7_bgmesh.pos'))
+gmsh.merge(os.path.join(path, os.pardir, 'crane_model_bgmesh.pos'))
 
 # If the post-processing view was model-based instead of list-based (i.e. if it
 # was based on an actual mesh), we would need to create a new model to contain
 # the geometry so that meshing it does not destroy the background mesh. It's not
 # necessary here since the view is list-based, but it does no harm:
-gmsh.model.add("t7")
+gmsh.model.add("crane_model")
 
-# Create a simple rectangular geometry:
+
+#------------------------------------------------------------------------------
+#
+#  Box geometry
+#
+# ------------------------------------------------------------------------------
+
+
 lc = 1e-2
-gmsh.model.geo.addPoint(0, 0, 0, lc, 1)
-gmsh.model.geo.addPoint(.1, 0, 0, lc, 2)
-gmsh.model.geo.addPoint(.1, .3, 0, lc, 3)
-gmsh.model.geo.addPoint(0, .3, 0, lc, 4)
+
+#WIDTH (x)
+if Mast.Width < Base.Width:
+    w=Base.Width
+elif Mast.Width < EndPlate.Width:
+    w=EndPlate.Width
+else:
+    w=Mast.Width
+
+#LENGTH (y)
+l=Mast.Length
+
+#HEIGHT (z)
+h=Mast.Height+EndPlate.Thickness+Base.Thickness
+
+tol=float(input("Enter how many meters the box 
+for the field will extend outside the dimensions of the mast?"))  
+if tol==0:
+    raise ValueError("Box must be larger than dimensions.")
+
+yes3D=bool(input("Visualize in 3D? \n Enter Yes or leave blank []")) 
+#      /5-------/8
+#     4--------3 | 
+#     | |      | |
+#     | 7------|-6
+#     |/       |/
+#     1--------2
+
+gmsh.model.geo.addPoint(0, 0, 0, lc, 1) #pt 1
+gmsh.model.geo.addPoint(w+tol, 0, 0, lc, 2) #pt 2, x
+gmsh.model.geo.addPoint(w+tol, l+tol, 0, lc, 3) #pt 3, xy
+gmsh.model.geo.addPoint(0, l+tol, 0, lc, 4) #pt 4, y
+if yes3D==true:
+    gmsh.model.geo.addPoint(0, l+tol, h+tol, lc, 5) #pt 5, yz
+    gmsh.model.geo.addPoint(w+tol, 0, h+tol, lc, 6) #pt 6, xz
+    gmsh.model.geo.addPoint(0, 0, h+tol, lc, 7) #pt 7, z
+    gmsh.model.geo.addPoint(w+tol, l+tol, h+tol, lc, 8) #pt 8, xyz
+
+#     8/5--9--11/8
+#     4---3----3 |10 
+#     | |12    | |
+#     4 7--11--2-6
+#     |/5      |/6
+#     1----1---2
+#front panel lines (x-y)
 gmsh.model.geo.addLine(1, 2, 1)
 gmsh.model.geo.addLine(3, 2, 2)
 gmsh.model.geo.addLine(3, 4, 3)
 gmsh.model.geo.addLine(4, 1, 4)
-gmsh.model.geo.addCurveLoop([4, 1, -2, 3], 1)
+if yes3D=-true:
+#extruding lines (x-z)
+    gmsh.model.geo.addLine(1, 7, 5)
+    gmsh.model.geo.addLine(2, 6, 6)
+    gmsh.model.geo.addLine(3, 8, 7)
+    gmsh.model.geo.addLine(4, 5, 8)
+#back panel lines (xy+z)
+    gmsh.model.geo.addLine(5, 11, 9)
+    gmsh.model.geo.addLine(6, 8, 10)
+    gmsh.model.geo.addLine(7, 6, 11)
+    gmsh.model.geo.addLine(5, 7, 12)
+#     8/[]--9--11/[]
+#     []--3----[]|10 
+#     | |12    | |
+#     4 []-11--2-[]
+#     |/5      |/6
+#     []---1---[]
+
+#      /[]--4---/[]
+#     []-------[]| 
+#     |3|  2   |5|
+#     | []-1----|[]
+#     |/    6  |/
+#     []-------[]
+
+gmsh.model.geo.addCurveLoop([4, 1, -2, 3], 1) # front panel face 1
 gmsh.model.geo.addPlaneSurface([1], 1)
+if yes3D==true:
+    gmsh.model.geo.addCurveLoop([11, 12, -9, 10], 2) # back panel face 2
+    gmsh.model.geo.addPlaneSurface([2], 2)
+    gmsh.model.geo.addCurveLoop([4, 8, -12, 5], 3) # left panel face 3
+    gmsh.model.geo.addPlaneSurface([3], 3)
+    gmsh.model.geo.addCurveLoop([8, 9, -11, 3], 4) # top panel face 4
+    gmsh.model.geo.addPlaneSurface([4], 4)
+    gmsh.model.geo.addCurveLoop([2, 11, -10, 6], 5) # right panel face 5
+    gmsh.model.geo.addPlaneSurface([5], 5)
+    gmsh.model.geo.addCurveLoop([5, 11, -6, 1], 6) # bottom panel face 6
+    gmsh.model.geo.addPlaneSurface([6], 6)
+
 gmsh.model.geo.synchronize()
+
+#------------------------------------------------------------------------------
+#
+#  Background mesh (post processing)
+#
+# ------------------------------------------------------------------------------
+
+
+
 
 # Add the post-processing view as a new size field:
 bg_field = gmsh.model.mesh.field.add("PostView")
@@ -218,49 +266,18 @@ gmsh.option.setNumber("Mesh.MeshSizeExtendFromBoundary", 0)
 gmsh.option.setNumber("Mesh.MeshSizeFromPoints", 0)
 gmsh.option.setNumber("Mesh.MeshSizeFromCurvature", 0)
 
-# See `t10.py' for additional information: background meshes are actually a
-# particular case of general "mesh size fields".
-
 gmsh.model.mesh.generate(2)
-gmsh.write("t7.msh")
+gmsh.write("crane_model.msh")
 
 # Launch the GUI to see the results:
 if '-nopopup' not in sys.argv:
     gmsh.fltk.run()
 
-gmsh.finalize()
-
- ------------------------------------------------------------------------------
-#
-#  Gmsh Python tutorial 8
+#------------------------------------------------------------------------------
 #
 #  Post-processing, image export and animations
 #
 # ------------------------------------------------------------------------------
-
-import gmsh
-import os
-import sys
-
-# In addition to creating geometries and meshes, the Python API can also be used
-# to manipulate post-processing datasets (called "views" in Gmsh).
-
-gmsh.initialize()
-
-# We first create a simple geometry
-lc = 1e-2
-gmsh.model.geo.addPoint(0, 0, 0, lc, 1)
-gmsh.model.geo.addPoint(.1, 0, 0, lc, 2)
-gmsh.model.geo.addPoint(.1, .3, 0, lc, 3)
-gmsh.model.geo.addPoint(0, .3, 0, lc, 4)
-gmsh.model.geo.addLine(1, 2, 1)
-gmsh.model.geo.addLine(3, 2, 2)
-gmsh.model.geo.addLine(3, 4, 3)
-gmsh.model.geo.addLine(4, 1, 4)
-gmsh.model.geo.addCurveLoop([4, 1, -2, 3], 1)
-gmsh.model.geo.addPlaneSurface([1], 1)
-
-gmsh.model.geo.synchronize()
 
 # We merge some post-processing views to work on
 path = os.path.dirname(os.path.abspath(__file__))
@@ -400,84 +417,6 @@ for num in range(1, 4):
         # subprocess.call("ffmpeg -i t8-%d.jpg t8.mpg".split(' '))
         pass
 
-if '-nopopup' not in sys.argv:
-    gmsh.fltk.run()
-
-gmsh.finalize()
-# ------------------------------------------------------------------------------
-#
-#  Gmsh Python tutorial 9
-#
-#  Plugins
-#
-# ------------------------------------------------------------------------------
-
-import gmsh
-import os
-import sys
-
-# Plugins can be added to Gmsh in order to extend its capabilities. For example,
-# post-processing plugins can modify views, or create new views based on
-# previously loaded views. Several default plugins are statically linked with
-# Gmsh, e.g. Isosurface, CutPlane, CutSphere, Skin, Transform or Smooth.
-#
-# Plugins can be controlled through the API functions with the `gmsh.plugin'
-# prefix, or from the graphical interface (right click on the view button, then
-# `Plugins').
-
-gmsh.initialize()
-
-# Let us for example include a three-dimensional scalar view:
-path = os.path.dirname(os.path.abspath(__file__))
-gmsh.merge(os.path.join(path, os.pardir, 'view3.pos'))
-v = gmsh.view.getTags()
-if len(v) != 1:
-    gmsh.logger.write("Wrong number of views!", "error")
-    gmsh.finalize()
-    exit()
-
-# We then set some options for the `Isosurface' plugin (which extracts an
-# isosurface from a 3D scalar view), and run it:
-gmsh.plugin.setNumber("Isosurface", "Value", 0.67)
-gmsh.plugin.setNumber("Isosurface", "View", 0)
-v1 = gmsh.plugin.run("Isosurface")
-
-# We also set some options for the `CutPlane' plugin (which computes a section
-# of a 3D view using the plane A*x+B*y+C*z+D=0), and then run it:
-gmsh.plugin.setNumber("CutPlane", "A", 0)
-gmsh.plugin.setNumber("CutPlane", "B", 0.2)
-gmsh.plugin.setNumber("CutPlane", "C", 1)
-gmsh.plugin.setNumber("CutPlane", "D", 0)
-gmsh.plugin.setNumber("CutPlane", "View", 0)
-v2 = gmsh.plugin.run("CutPlane")
-
-# Add a title (By convention, for window coordinates a value greater than 99999
-# represents the center. We could also use `General.GraphicsWidth / 2', but that
-# would only center the string for the current window size.):
-gmsh.plugin.setString("Annotate", "Text", "A nice title")
-gmsh.plugin.setNumber("Annotate", "X", 1.e5)
-gmsh.plugin.setNumber("Annotate", "Y", 50)
-gmsh.plugin.setString("Annotate", "Font", "Times-BoldItalic")
-gmsh.plugin.setNumber("Annotate", "FontSize", 28)
-gmsh.plugin.setString("Annotate", "Align", "Center")
-gmsh.plugin.setNumber("Annotate", "View", 0)
-gmsh.plugin.run("Annotate")
-
-gmsh.plugin.setString("Annotate", "Text", "(and a small subtitle)")
-gmsh.plugin.setNumber("Annotate", "Y", 70)
-gmsh.plugin.setString("Annotate", "Font", "Times-Roman")
-gmsh.plugin.setNumber("Annotate", "FontSize", 12)
-gmsh.plugin.run("Annotate")
-
-# We finish by setting some options:
-gmsh.view.option.setNumber(v[0], "Light", 1)
-gmsh.view.option.setNumber(v[0], "IntervalsType", 1)
-gmsh.view.option.setNumber(v[0], "NbIso", 6)
-gmsh.view.option.setNumber(v[0], "SmoothNormals", 1)
-gmsh.view.option.setNumber(v1, "IntervalsType", 2)
-gmsh.view.option.setNumber(v2, "IntervalsType", 2)
-
-# Launch the GUI to see the results:
 if '-nopopup' not in sys.argv:
     gmsh.fltk.run()
 
